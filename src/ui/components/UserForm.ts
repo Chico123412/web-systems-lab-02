@@ -1,23 +1,21 @@
 import { Validation } from "../../utils/validators";
 
 export interface UserFormData {
-    id: string;
-    name: string;
-    email: string;
+  id: string;
+  name: string;
+  email: string;
 }
 
 type UserFormSubmitHandler = (data: UserFormData) => boolean;
 
 export class UserForm {
-    constructor(
-        private readonly onSubmit: UserFormSubmitHandler
-    ) {}
+  constructor(private readonly onSubmit: UserFormSubmitHandler) {}
 
-    render(): HTMLElement {
-        const section = document.createElement("section");
-        section.className = "card border-0 shadow-sm mb-4";
+  render(): HTMLElement {
+    const section = document.createElement("section");
+    section.className = "card border-0 shadow-sm mb-4";
 
-        section.innerHTML = `
+    section.innerHTML = `
       <div class="card-body p-4">
         <h2 class="h4 mb-3">Додати користувача</h2>
 
@@ -86,57 +84,53 @@ export class UserForm {
       </div>
     `;
 
-        const form =
-            section.querySelector<HTMLFormElement>(".user-form");
-        const idInput =
-            section.querySelector<HTMLInputElement>("#user-id");
-        const nameInput =
-            section.querySelector<HTMLInputElement>("#user-name");
-        const emailInput =
-            section.querySelector<HTMLInputElement>("#user-email");
+    const form = section.querySelector<HTMLFormElement>(".user-form");
+    const idInput = section.querySelector<HTMLInputElement>("#user-id");
+    const nameInput = section.querySelector<HTMLInputElement>("#user-name");
+    const emailInput = section.querySelector<HTMLInputElement>("#user-email");
 
-        if (!form || !idInput || !nameInput || !emailInput) {
-            throw new Error("Не вдалося створити форму користувача");
-        }
-
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const isIdValid =
-                Validation.isRequired(idInput.value) &&
-                Validation.isValidUserId(idInput.value);
-
-            const isNameValid = Validation.isRequired(nameInput.value);
-
-            const isEmailValid =
-                Validation.isRequired(emailInput.value) &&
-                Validation.isValidEmail(emailInput.value);
-
-            idInput.classList.toggle("is-invalid", !isIdValid);
-            nameInput.classList.toggle("is-invalid", !isNameValid);
-            emailInput.classList.toggle("is-invalid", !isEmailValid);
-
-            if (!isIdValid || !isNameValid || !isEmailValid) {
-                return;
-            }
-
-            const wasAdded = this.onSubmit({
-                id: idInput.value.trim(),
-                name: nameInput.value.trim(),
-                email: emailInput.value.trim()
-            });
-
-            if (wasAdded) {
-                form.reset();
-            }
-        });
-
-        [idInput, nameInput, emailInput].forEach((input) => {
-            input.addEventListener("input", () => {
-                input.classList.remove("is-invalid");
-            });
-        });
-
-        return section;
+    if (!form || !idInput || !nameInput || !emailInput) {
+      throw new Error("Не вдалося створити форму користувача");
     }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const isIdValid =
+        Validation.isRequired(idInput.value) &&
+        Validation.isValidUserId(idInput.value);
+
+      const isNameValid = Validation.isRequired(nameInput.value);
+
+      const isEmailValid =
+        Validation.isRequired(emailInput.value) &&
+        Validation.isValidEmail(emailInput.value);
+
+      idInput.classList.toggle("is-invalid", !isIdValid);
+      nameInput.classList.toggle("is-invalid", !isNameValid);
+      emailInput.classList.toggle("is-invalid", !isEmailValid);
+
+      if (!isIdValid || !isNameValid || !isEmailValid) {
+        return;
+      }
+
+      const wasAdded = this.onSubmit({
+        id: idInput.value.trim(),
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim()
+      });
+
+      if (wasAdded) {
+        form.reset();
+      }
+    });
+
+    [idInput, nameInput, emailInput].forEach((input) => {
+      input.addEventListener("input", () => {
+        input.classList.remove("is-invalid");
+      });
+    });
+
+    return section;
+  }
 }

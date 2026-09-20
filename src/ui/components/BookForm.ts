@@ -1,23 +1,21 @@
 import { Validation } from "../../utils/validators";
 
 export interface BookFormData {
-    title: string;
-    author: string;
-    publicationYear: number;
+  title: string;
+  author: string;
+  publicationYear: number;
 }
 
 type BookFormSubmitHandler = (data: BookFormData) => boolean;
 
 export class BookForm {
-    constructor(
-        private readonly onSubmit: BookFormSubmitHandler
-    ) {}
+  constructor(private readonly onSubmit: BookFormSubmitHandler) {}
 
-    render(): HTMLElement {
-        const section = document.createElement("section");
-        section.className = "card border-0 shadow-sm mb-4";
+  render(): HTMLElement {
+    const section = document.createElement("section");
+    section.className = "card border-0 shadow-sm mb-4";
 
-        section.innerHTML = `
+    section.innerHTML = `
       <div class="card-body p-4">
         <h2 class="h4 mb-3">Додати книгу</h2>
 
@@ -87,53 +85,47 @@ export class BookForm {
       </div>
     `;
 
-        const form =
-            section.querySelector<HTMLFormElement>(".book-form");
-        const titleInput =
-            section.querySelector<HTMLInputElement>("#book-title");
-        const authorInput =
-            section.querySelector<HTMLInputElement>("#book-author");
-        const yearInput =
-            section.querySelector<HTMLInputElement>("#book-year");
+    const form = section.querySelector<HTMLFormElement>(".book-form");
+    const titleInput = section.querySelector<HTMLInputElement>("#book-title");
+    const authorInput = section.querySelector<HTMLInputElement>("#book-author");
+    const yearInput = section.querySelector<HTMLInputElement>("#book-year");
 
-        if (!form || !titleInput || !authorInput || !yearInput) {
-            throw new Error("Не вдалося створити форму книги");
-        }
-
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const isTitleValid = Validation.isRequired(titleInput.value);
-            const isAuthorValid = Validation.isRequired(authorInput.value);
-            const isYearValid = Validation.isValidPublicationYear(
-                yearInput.value
-            );
-
-            titleInput.classList.toggle("is-invalid", !isTitleValid);
-            authorInput.classList.toggle("is-invalid", !isAuthorValid);
-            yearInput.classList.toggle("is-invalid", !isYearValid);
-
-            if (!isTitleValid || !isAuthorValid || !isYearValid) {
-                return;
-            }
-
-            const wasAdded = this.onSubmit({
-                title: titleInput.value.trim(),
-                author: authorInput.value.trim(),
-                publicationYear: Number(yearInput.value)
-            });
-
-            if (wasAdded) {
-                form.reset();
-            }
-        });
-
-        [titleInput, authorInput, yearInput].forEach((input) => {
-            input.addEventListener("input", () => {
-                input.classList.remove("is-invalid");
-            });
-        });
-
-        return section;
+    if (!form || !titleInput || !authorInput || !yearInput) {
+      throw new Error("Не вдалося створити форму книги");
     }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const isTitleValid = Validation.isRequired(titleInput.value);
+      const isAuthorValid = Validation.isRequired(authorInput.value);
+      const isYearValid = Validation.isValidPublicationYear(yearInput.value);
+
+      titleInput.classList.toggle("is-invalid", !isTitleValid);
+      authorInput.classList.toggle("is-invalid", !isAuthorValid);
+      yearInput.classList.toggle("is-invalid", !isYearValid);
+
+      if (!isTitleValid || !isAuthorValid || !isYearValid) {
+        return;
+      }
+
+      const wasAdded = this.onSubmit({
+        title: titleInput.value.trim(),
+        author: authorInput.value.trim(),
+        publicationYear: Number(yearInput.value)
+      });
+
+      if (wasAdded) {
+        form.reset();
+      }
+    });
+
+    [titleInput, authorInput, yearInput].forEach((input) => {
+      input.addEventListener("input", () => {
+        input.classList.remove("is-invalid");
+      });
+    });
+
+    return section;
+  }
 }
