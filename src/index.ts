@@ -8,7 +8,7 @@ import { renderApp } from "./ui/render";
 const app = document.querySelector<HTMLElement>("#app");
 
 if (!app) {
-    throw new Error("Елемент #app не знайдено");
+  throw new Error("Елемент #app не знайдено");
 }
 
 const libraryManager = new LibraryManager();
