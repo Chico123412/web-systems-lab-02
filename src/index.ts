@@ -2,22 +2,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "./styles/main.scss";
 
-const app = document.querySelector<HTMLDivElement>("#app");
+import { LibraryManager } from "./services/LibraryManager";
+import { renderApp } from "./ui/render";
+
+const app = document.querySelector<HTMLElement>("#app");
 
 if (!app) {
     throw new Error("Елемент #app не знайдено");
 }
 
-const container = document.createElement("main");
-container.className = "container py-5";
+const libraryManager = new LibraryManager();
 
-const title = document.createElement("h1");
-title.className = "text-center mb-4";
-title.textContent = "Система управління бібліотекою";
-
-const description = document.createElement("p");
-description.className = "text-center text-secondary";
-description.textContent = "Застосунок успішно запущено через TypeScript і webpack.";
-
-container.append(title, description);
-app.append(container);
+renderApp(app, libraryManager);
